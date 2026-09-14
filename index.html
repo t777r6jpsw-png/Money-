@@ -13,7 +13,7 @@ header{height:70px;padding:16px 18px 8px;display:flex;align-items:center;justify
 .brand{font-family:Georgia,serif;font-size:22px;color:var(--navy);letter-spacing:-.4px}.headerRight{display:flex;align-items:center;gap:8px}.monthBtn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 10px;color:var(--navy);font-size:13px}.bell{border:0;background:none;font-size:19px;color:var(--navy)}
 main{padding:10px 18px 105px}.screen{display:none}.screen.active{display:block}
 h1{font-family:Georgia,"Noto Serif TC",serif;font-size:29px;line-height:1.2;margin:12px 0 4px;color:var(--navy)}h2{font-size:19px;margin:18px 0 10px}.sub{color:var(--muted);font-size:12px}
-.hero{margin-top:15px;padding:19px;border-radius:22px;background:linear-gradient(135deg,#244d6d,#718ea5);color:white;box-shadow:0 12px 30px #17324d22}.hero .label{font-size:12px;opacity:.82}.hero .balance{font-family:Georgia,serif;font-size:34px;margin:5px 0 13px}.hero .row{display:flex;gap:28px;font-size:11px}.hero .row b{font-size:14px;font-weight:500}
+.hero{margin-top:15px;padding:19px;border-radius:22px;background:linear-gradient(135deg,var(--navy),var(--blue));color:white;box-shadow:0 12px 30px #17324d22}.hero .label{font-size:12px;opacity:.82}.hero .balance{font-family:Georgia,serif;font-size:34px;margin:5px 0 13px}.hero .row{display:flex;gap:28px;font-size:11px}.hero .row b{font-size:14px;font-weight:500}
 .card,.form-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin-top:12px;box-shadow:0 5px 18px #17324d0b}.section-head{display:flex;justify-content:space-between;align-items:center}.section-head h2{margin:0}.link{border:0;background:none;color:var(--blue);font-size:12px}.progress{height:8px;background:#e8edf0;border-radius:10px;overflow:hidden;margin:12px 0 8px}.progress i{display:block;height:100%;background:var(--navy);border-radius:10px}
 .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.quick button{border:1px solid var(--line);background:#fff;border-radius:15px;padding:11px 4px;color:var(--ink);font-size:11px}.quick span{display:block;font-size:20px;margin-bottom:4px}
 .txWrap{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}.txWrap:last-child{border:0}.txActions{position:absolute;right:0;top:0;height:100%;display:flex;align-items:stretch;transform:translateX(0);z-index:0}.txActions button{width:60px;border:0;color:#fff;font-size:12px}.editBtn{background:var(--blue)}.deleteBtn{background:var(--red)}
@@ -98,21 +98,12 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 <script>
 
 const THEMES={
-  navy:{name:'質感藍',main:'#17324d',blue:'#4d7698',sky:'#dfeaf2',green:'#587b70'},
-  sage:{name:'鼠尾草綠',main:'#4d665d',blue:'#708d82',sky:'#e1e9e5',green:'#587b70'},
-  dustyRose:{name:'灰玫瑰',main:'#765b62',blue:'#9a7c82',sky:'#eee2e4',green:'#667a70'},
-  terracotta:{name:'陶土棕',main:'#795d52',blue:'#a17b6c',sky:'#eee3de',green:'#687969'},
-  taupe:{name:'摩卡灰',main:'#665d55',blue:'#8d8075',sky:'#ebe7e3',green:'#657267'},
-  sand:{name:'奶茶杏',main:'#806d59',blue:'#a18c73',sky:'#eee7dd',green:'#657666'},
-  mauve:{name:'灰紫',main:'#655b6e',blue:'#8b7e97',sky:'#e9e4eb',green:'#647468'},
-  mist:{name:'霧灰藍',main:'#506674',blue:'#78909f',sky:'#e1e8ec',green:'#5f746e'},
-  clayPink:{name:'裸粉陶',main:'#7b6260',blue:'#a18481',sky:'#eee4e2',green:'#65746c'},
-  olive:{name:'橄欖灰',main:'#626752',blue:'#858a6f',sky:'#e8e9df',green:'#607063'},
-  cocoa:{name:'可可灰',main:'#62564f',blue:'#8a7569',sky:'#e9e3df',green:'#627168'},
-  eucalyptus:{name:'尤加利',main:'#4f6d67',blue:'#76928b',sky:'#e0e9e6',green:'#58756e'},
-  lavender:{name:'霧薰衣草',main:'#625e72',blue:'#858097',sky:'#e7e4eb',green:'#65746d'},
-  charcoal:{name:'暖炭灰',main:'#44494b',blue:'#6c777c',sky:'#e4e6e6',green:'#5e6b67'},
-  butter:{name:'奶油黃',main:'#776f51',blue:'#a0966f',sky:'#eeeadd',green:'#667465'}
+  mist:{name:'霧灰藍',main:'#58758A',blue:'#7E9AAC',sky:'#E4EBEF',green:'#60796F'},
+  rose:{name:'玫瑰粉',main:'#9B6674',blue:'#C58D9B',sky:'#F3E5E9',green:'#68786F'},
+  sand:{name:'奶茶杏',main:'#92765D',blue:'#B1977B',sky:'#F0E7DD',green:'#68766B'},
+  lavender:{name:'薰衣草',main:'#756B86',blue:'#9A91AD',sky:'#EAE7F0',green:'#68776F'},
+  sage:{name:'鼠尾草綠',main:'#5D766B',blue:'#819A90',sky:'#E5ECE9',green:'#5B756B'},
+  cocoa:{name:'深可可色',main:'#55443D',blue:'#806C61',sky:'#E9E2DE',green:'#66736B'}
 };
 function applyTheme(key){
   const t=THEMES[key]||THEMES.navy;
