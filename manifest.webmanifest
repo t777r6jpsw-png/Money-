@@ -1,0 +1,13 @@
+{
+  "name": "MoneyMate｜智慧記帳",
+  "short_name": "MoneyMate",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fbfaf7",
+  "theme_color": "#17324d",
+  "lang": "zh-Hant",
+  "description": "簡潔、隱私優先的個人記帳工具",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

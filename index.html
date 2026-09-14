@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#17324d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MoneyMate">
+<link rel="manifest" href="manifest.webmanifest">
 <title>MoneyMate｜智慧記帳</title>
 <style>
 :root{--navy:#17324d;--blue:#4d7698;--sky:#dfeaf2;--ice:#f3f6f8;--cream:#fbfaf7;--ink:#20303d;--muted:#7c8790;--line:#e6e9e9;--gold:#c7aa78;--green:#587b70;--red:#b55d5d}
@@ -96,6 +100,7 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 <div class="toast" id="toast"></div>
 
 <script>
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
 
 const THEMES={
   mist:{name:'霧灰藍',main:'#58758A',blue:'#7E9AAC',sky:'#E4EBEF',green:'#60796F'},
