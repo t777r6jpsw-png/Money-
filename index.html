@@ -16,8 +16,8 @@ h1{font-family:Georgia,"Noto Serif TC",serif;font-size:29px;line-height:1.2;marg
 .hero{margin-top:15px;padding:19px;border-radius:22px;background:linear-gradient(135deg,#244d6d,#718ea5);color:white;box-shadow:0 12px 30px #17324d22}.hero .label{font-size:12px;opacity:.82}.hero .balance{font-family:Georgia,serif;font-size:34px;margin:5px 0 13px}.hero .row{display:flex;gap:28px;font-size:11px}.hero .row b{font-size:14px;font-weight:500}
 .card,.form-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin-top:12px;box-shadow:0 5px 18px #17324d0b}.section-head{display:flex;justify-content:space-between;align-items:center}.section-head h2{margin:0}.link{border:0;background:none;color:var(--blue);font-size:12px}.progress{height:8px;background:#e8edf0;border-radius:10px;overflow:hidden;margin:12px 0 8px}.progress i{display:block;height:100%;background:var(--navy);border-radius:10px}
 .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.quick button{border:1px solid var(--line);background:#fff;border-radius:15px;padding:11px 4px;color:var(--ink);font-size:11px}.quick span{display:block;font-size:20px;margin-bottom:4px}
-.txWrap{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}.txWrap:last-child{border:0}.txActions{position:absolute;right:0;top:0;height:100%;display:flex;align-items:stretch;transform:translateX(120px);transition:.2s}.txActions button{width:60px;border:0;color:#fff;font-size:12px}.editBtn{background:var(--blue)}.deleteBtn{background:var(--red)}
-.tx{display:flex;align-items:center;gap:10px;padding:12px 0;background:#fff;position:relative;z-index:1;transition:transform .2s;touch-action:pan-y}.tx .icon{width:40px;height:40px;border-radius:13px;background:var(--ice);display:grid;place-items:center;font-size:19px;flex:none}.tx .info{flex:1;min-width:0}.tx .name{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tx .meta{font-size:10px;color:var(--muted);margin-top:3px}.amount{font-family:Georgia,serif;font-size:15px;white-space:nowrap}.income{color:var(--green)}
+.txWrap{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}.txWrap:last-child{border:0}.txActions{position:absolute;right:0;top:0;height:100%;display:flex;align-items:stretch;transform:translateX(0);z-index:0}.txActions button{width:60px;border:0;color:#fff;font-size:12px}.editBtn{background:var(--blue)}.deleteBtn{background:var(--red)}
+.tx{display:flex;align-items:center;gap:10px;padding:12px 0;background:#fff;position:relative;z-index:1;transition:transform .22s ease;touch-action:pan-y;will-change:transform}.tx .icon{width:40px;height:40px;border-radius:13px;background:var(--ice);display:grid;place-items:center;font-size:19px;flex:none}.tx .info{flex:1;min-width:0}.tx .name{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tx .meta{font-size:10px;color:var(--muted);margin-top:3px}.amount{font-family:Georgia,serif;font-size:15px;white-space:nowrap}.income{color:var(--green)}
 nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:78px;background:#fffdfaf2;backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:10}nav button{border:0;background:none;color:#8a949b;font-size:10px}nav button.active{color:var(--navy);font-weight:600}nav .plus{width:50px;height:50px;border-radius:50%;margin:-1px auto 0;background:var(--navy);color:#fff;font-size:25px;box-shadow:0 8px 20px #17324d44}
 .seg{display:flex;background:#edf1f3;padding:3px;border-radius:12px}.seg button{flex:1;border:0;background:transparent;padding:9px;border-radius:9px;font-size:12px}.seg button.on{background:var(--navy);color:#fff}
 .money{font-family:Georgia,serif;font-size:43px;text-align:center;padding:19px 0;color:var(--navy)}.money input{border:0;width:190px;text-align:center;font:inherit;font-size:43px;color:var(--navy);outline:0;background:transparent}.field{margin-top:13px}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.field input,.field select{width:100%;border:1px solid var(--line);background:#fafbfa;border-radius:12px;padding:11px;outline:0}.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.cat{border:1px solid var(--line);background:#fff;border-radius:13px;padding:9px 2px;text-align:center;font-size:10px;color:var(--ink)}.cat.on{border-color:var(--navy);background:#edf4f8}.cat span{display:block;font-size:19px;margin-bottom:3px}.primary{width:100%;border:0;background:var(--navy);color:#fff;border-radius:14px;padding:14px;margin-top:17px}.ghost{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 13px;color:var(--ink)}
@@ -56,7 +56,7 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 <button class="primary" id="saveBtn" onclick="saveTx()">完成記帳</button></div>
 </section>
 
-<section id="transactions" class="screen"><div class="section-head"><h1>交易紀錄</h1><button class="ghost" onclick="openAdd('expense')">＋ 記帳</button></div><div class="sub" id="txMonth"></div><div class="card" id="allTx"></div></section>
+<section id="transactions" class="screen"><div class="section-head"><h1>交易紀錄</h1><button class="ghost" onclick="openAdd('expense')">＋ 記帳</button></div><div class="sub" id="txMonth"></div><div class="sub" style="margin-top:5px;color:var(--blue)">← 左滑交易項目即可編輯或刪除</div><div class="card" id="allTx"></div></section>
 
 <section id="stats" class="screen"><h1>統計</h1>
 <div class="toolbar"><div class="seg"><button id="tabDay" onclick="setStatPeriod('day')">日</button><button id="tabWeek" onclick="setStatPeriod('week')">週</button><button id="tabMonth" class="on" onclick="setStatPeriod('month')">月</button><button id="tabYear" onclick="setStatPeriod('year')">年</button></div></div>
@@ -85,7 +85,7 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 </div>
 
 <div class="modal" id="monthModal"><div class="sheet"><div class="closeTop"><h2>選擇年月</h2><button class="close" onclick="closeModal('monthModal')">×</button></div><div class="monthPicker"><select id="yearSelect"></select><select id="monthSelect"></select></div><button class="primary" onclick="applyMonth()">查看這個月</button></div></div>
-<div class="modal" id="noticeModal"><div class="sheet"><div class="closeTop"><h2>🔔 發現一筆消費</h2><button class="close" onclick="closeModal('noticeModal')">×</button></div><div class="notice"><b>Starbucks</b><br><span>消費類別：飲食／咖啡<br>交易金額：NT$145<br>付款方式：Apple Pay</span></div><button class="primary" onclick="demoNotice()">確認記帳</button><button class="ghost" style="width:100%;margin-top:9px" onclick="closeModal('noticeModal')">稍後處理</button></div></div>
+<div class="modal" id="noticeModal"><div class="sheet"><div class="closeTop"><h2>🔔 發現一筆消費</h2><button class="close" onclick="closeModal('noticeModal')">×</button></div><div class="notice"><b>示範通知｜Starbucks</b><br><span>這是 Prototype 的測試資料，不代表真的偵測到消費。<br><br>消費類別：飲食／咖啡<br>交易金額：NT$145<br>付款方式：Apple Pay</span></div><button class="primary" onclick="demoNotice()">確認記帳</button><button class="ghost" style="width:100%;margin-top:9px" onclick="closeModal('noticeModal')">稍後處理</button></div></div>
 <div class="modal" id="settingsModal"><div class="sheet"><div class="closeTop"><h2>設定</h2><button class="close" onclick="closeModal('settingsModal')">×</button></div><div class="settingItem"><span>🔔 消費記帳提醒</span><button class="ghost" onclick="toast('已切換提醒設定')">開啟</button></div><div class="settingItem"><span>💾 資料匯出</span><button class="ghost" onclick="exportData()">匯出 JSON</button></div><div class="settingItem"><span>🗑️ 清除所有資料</span><button class="ghost danger" onclick="clearData()">清除</button></div></div></div>
 <div class="toast" id="toast"></div>
 
@@ -121,7 +121,46 @@ let byCat=groupCat(m.filter(x=>x.type==='expense')),top=Object.entries(byCat).so
 renderStats();renderYear();renderAccounts();attachSwipe();
 }
 function txHtml(x){return `<div class="txWrap" id="tx-${x.id}"><div class="txActions"><button class="editBtn" onclick="editTx(${x.id})">編輯</button><button class="deleteBtn" onclick="deleteTx(${x.id})">刪除</button></div><div class="tx"><div class="icon">${x.icon||'•'}</div><div class="info"><div class="name">${esc(x.merchant||x.note||x.cat)}</div><div class="meta">${esc(x.cat||'轉帳')} · ${x.date} · ${esc(x.account||'')}</div></div><div class="amount ${x.type==='income'?'income':''}">${x.type==='income'?'+':'−'}${money(x.amount)}</div></div></div>`}
-function attachSwipe(){document.querySelectorAll('.tx').forEach(el=>{let sx=0,dx=0;el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;dx=0},{passive:true});el.addEventListener('touchmove',e=>{dx=e.touches[0].clientX-sx;if(dx<0&&dx>-120)el.style.transform=`translateX(${dx}px)`},{passive:true});el.addEventListener('touchend',()=>{if(dx<-55)el.style.transform='translateX(-120px)';else el.style.transform='translateX(0)'})})}
+function attachSwipe(){
+  document.querySelectorAll('.tx').forEach(el=>{
+    let sx=0, sy=0, dx=0, dragging=false;
+    const closeOthers=()=>document.querySelectorAll('.tx').forEach(x=>{if(x!==el)x.style.transform='translateX(0)'});
+    const start=(x,y)=>{sx=x;sy=y;dx=0;dragging=true;closeOthers()};
+    const move=(x,y)=>{
+      if(!dragging)return;
+      dx=x-sx;
+      const dy=y-sy;
+      if(Math.abs(dx)>Math.abs(dy) && dx<0){
+        el.style.transform=`translateX(${Math.max(dx,-120)}px)`;
+      }
+    };
+    const end=()=>{
+      if(!dragging)return;
+      dragging=false;
+      if(dx<-45) el.style.transform='translateX(-120px)';
+      else el.style.transform='translateX(0)';
+    };
+    el.addEventListener('touchstart',e=>{
+      if(e.touches.length===1) start(e.touches[0].clientX,e.touches[0].clientY);
+    },{passive:true});
+    el.addEventListener('touchmove',e=>{
+      if(e.touches.length===1) move(e.touches[0].clientX,e.touches[0].clientY);
+    },{passive:true});
+    el.addEventListener('touchend',end,{passive:true});
+    el.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='mouse') start(e.clientX,e.clientY);
+    });
+    el.addEventListener('pointermove',e=>{
+      if(e.pointerType==='mouse') move(e.clientX,e.clientY);
+    });
+    el.addEventListener('pointerup',e=>{
+      if(e.pointerType==='mouse') end();
+    });
+    el.addEventListener('click',()=>{
+      if(dx<-45){ el.style.transform='translateX(-120px)'; }
+    });
+  });
+}
 function openAdd(t='expense',id=null){editingId=id;setType(t);document.getElementById('amount').value='';document.getElementById('note').value='';document.getElementById('date').value=(selectedMonth===defaultMonth?new Date().toISOString().slice(0,10):selectedMonth+'-01');document.getElementById('account').value='現金';document.getElementById('saveBtn').textContent='完成記帳';if(id){let x=state.tx.find(t=>t.id===id);if(x){document.getElementById('amount').value=x.amount;document.getElementById('note').value=x.merchant||x.note||'';document.getElementById('date').value=x.date;document.getElementById('account').value=x.account||'現金';selectedCat=x.cat||'其他';type=x.type;setType(type);document.getElementById('saveBtn').textContent='儲存修改'}}show('add')}
 function setType(t){type=t;['expense','income','transfer'].forEach(k=>document.getElementById('seg'+k[0].toUpperCase()+k.slice(1)).classList.toggle('on',k===t));renderCats()}
 function renderCats(){document.getElementById('cats').innerHTML=CATS.map(c=>`<button class="cat ${selectedCat===c[1]?'on':''}" onclick="selectedCat='${c[1]}';renderCats()"><span>${c[0]}</span>${c[1]}</button>`).join('')}
@@ -157,7 +196,6 @@ function clearData(){if(confirm('確定清除所有本機帳務資料？')){loca
 function toast(msg){let e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1600)}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 renderCats();render();
-setTimeout(()=>openNotice(),900);
 </script>
 </body>
 </html>
