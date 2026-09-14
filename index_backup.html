@@ -61,8 +61,7 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 <div class="money">NT$ <input id="amount" inputmode="decimal" placeholder="0"></div>
 <div class="field"><label>分類</label><div class="cats" id="cats"></div></div>
 <div class="field"><label>日期</label><input id="date" type="date"></div>
-<div class="field"><label>付款方式</label><select id="account"><option>現金</option><option>銀行帳戶</option><option>信用卡</option><option>Apple Pay</option><option>LINE Pay</option></select></div>
-<div id="linePayHint" class="notice" style="display:none"><b>💚 LINE Pay</b><br><span>目前可將 LINE Pay 消費當作付款方式記帳。<br>iPhone 不允許 MoneyMate 直接讀取 LINE 的通知，因此這裡不會自動讀取通知。</span></div>
+<div class="field"><label>帳戶</label><select id="account"><option>現金</option><option>銀行帳戶</option><option>信用卡</option><option>Apple Pay</option><option>LINE Pay</option></select></div>
 <div class="field"><label>商店／備註</label><input id="note" placeholder="例如：和朋友喝咖啡"></div>
 <button class="primary" id="saveBtn" onclick="saveTx()">完成記帳</button></div>
 </section>
@@ -96,7 +95,7 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 </div>
 
 <div class="modal" id="monthModal"><div class="sheet"><div class="closeTop"><h2>選擇年月</h2><button class="close" onclick="closeModal('monthModal')">×</button></div><div class="monthPicker"><select id="yearSelect"></select><select id="monthSelect"></select></div><button class="primary" onclick="applyMonth()">查看這個月</button></div></div>
-<div class="modal" id="noticeModal"><div class="sheet"><div class="closeTop"><h2>🔔 發現一筆消費</h2><button class="close" onclick="closeModal('noticeModal')">×</button></div><div class="notice"><b>示範通知｜Starbucks</b><br><span>這是 Prototype 的測試資料，不代表真的偵測到消費。<br><br>消費類別：飲食／咖啡<br>交易金額：NT$145<br>付款方式：LINE Pay</span></div><button class="primary" onclick="demoNotice()">確認記帳</button><button class="ghost" style="width:100%;margin-top:9px" onclick="closeModal('noticeModal')">稍後處理</button></div></div>
+<div class="modal" id="noticeModal"><div class="sheet"><div class="closeTop"><h2>🔔 發現一筆消費</h2><button class="close" onclick="closeModal('noticeModal')">×</button></div><div class="notice"><b>示範通知｜Starbucks</b><br><span>這是 Prototype 的測試資料，不代表真的偵測到消費。<br><br>消費類別：飲食／咖啡<br>交易金額：NT$145<br>付款方式：Apple Pay</span></div><button class="primary" onclick="demoNotice()">確認記帳</button><button class="ghost" style="width:100%;margin-top:9px" onclick="closeModal('noticeModal')">稍後處理</button></div></div>
 <div class="modal" id="settingsModal"><div class="sheet"><div class="closeTop"><h2>設定</h2><button class="close" onclick="closeModal('settingsModal')">×</button></div><div class="settingItem"><span>🔔 消費記帳提醒</span><button class="ghost" onclick="toast('已切換提醒設定')">開啟</button></div><div class="settingItem"><span>💾 資料匯出</span><button class="ghost" onclick="exportData()">匯出 JSON</button></div><div class="settingItem"><span>🗑️ 清除所有資料</span><button class="ghost danger" onclick="clearData()">清除</button></div></div></div>
 <div class="toast" id="toast"></div>
 
@@ -200,10 +199,9 @@ function attachSwipe(){
     });
   });
 }
-function openAdd(t='expense',id=null){editingId=id;setType(t);document.getElementById('amount').value='';document.getElementById('note').value='';document.getElementById('date').value=(selectedMonth===defaultMonth?new Date().toISOString().slice(0,10):selectedMonth+'-01');document.getElementById('account').value='現金';document.getElementById('linePayHint').style.display='none';document.getElementById('saveBtn').textContent='完成記帳';if(id){let x=state.tx.find(t=>t.id===id);if(x){document.getElementById('amount').value=x.amount;document.getElementById('note').value=x.merchant||x.note||'';document.getElementById('date').value=x.date;document.getElementById('account').value=x.account||'現金';selectedCat=x.cat||'其他';type=x.type;setType(type);document.getElementById('saveBtn').textContent='儲存修改'}}show('add')}
+function openAdd(t='expense',id=null){editingId=id;setType(t);document.getElementById('amount').value='';document.getElementById('note').value='';document.getElementById('date').value=(selectedMonth===defaultMonth?new Date().toISOString().slice(0,10):selectedMonth+'-01');document.getElementById('account').value='現金';document.getElementById('saveBtn').textContent='完成記帳';if(id){let x=state.tx.find(t=>t.id===id);if(x){document.getElementById('amount').value=x.amount;document.getElementById('note').value=x.merchant||x.note||'';document.getElementById('date').value=x.date;document.getElementById('account').value=x.account||'現金';selectedCat=x.cat||'其他';type=x.type;setType(type);document.getElementById('saveBtn').textContent='儲存修改'}}show('add')}
 function setType(t){type=t;['expense','income','transfer'].forEach(k=>document.getElementById('seg'+k[0].toUpperCase()+k.slice(1)).classList.toggle('on',k===t));renderCats()}
 function renderCats(){document.getElementById('cats').innerHTML=CATS.map(c=>`<button class="cat ${selectedCat===c[1]?'on':''}" onclick="selectedCat='${c[1]}';renderCats()"><span>${c[0]}</span>${c[1]}</button>`).join('')}
-document.getElementById('account').addEventListener('change',function(){document.getElementById('linePayHint').style.display=this.value==='LINE Pay'?'block':'none'});
 function saveTx(){let a=parseFloat(document.getElementById('amount').value);if(!a||a<=0){toast('請輸入正確金額');return}let icon=(CATS.find(c=>c[1]===selectedCat)||['•'])[0],obj={type,amount:a,cat:type==='transfer'?'轉帳':selectedCat,icon,merchant:document.getElementById('note').value||selectedCat,date:document.getElementById('date').value||selectedMonth+'-01',account:document.getElementById('account').value,note:document.getElementById('note').value};if(editingId){let i=state.tx.findIndex(x=>x.id===editingId);if(i>-1)state.tx[i]={...state.tx[i],...obj}}else state.tx.push({id:Date.now(),...obj});persist();editingId=null;toast(editingId?'已儲存修改':'已完成記帳');show('home')}
 function editTx(id){openAdd('expense',id)}
 function deleteTx(id){if(!confirm('確定要刪除這筆交易嗎？'))return;state.tx=state.tx.filter(x=>x.id!==id);persist();toast('已刪除');render()}
@@ -227,7 +225,7 @@ function openMonthPicker(){let [y,m]=selectedMonth.split('-').map(Number);docume
 function applyMonth(){selectedMonth=`${document.getElementById('yearSelect').value}-${pad(document.getElementById('monthSelect').value)}`;persist();closeModal('monthModal');render()}
 function closeModal(id){document.getElementById(id).classList.remove('show')}
 function openNotice(){document.getElementById('noticeModal').classList.add('show')}
-function demoNotice(){state.tx.push({id:Date.now(),type:'expense',amount:145,cat:'咖啡',icon:'☕',merchant:'Starbucks',date:selectedMonth+'-15',account:'LINE Pay',note:'LINE Pay 示範記帳'});persist();closeModal('noticeModal');toast('已加入記帳');render()}
+function demoNotice(){state.tx.push({id:Date.now(),type:'expense',amount:145,cat:'咖啡',icon:'☕',merchant:'Starbucks',date:selectedMonth+'-15',account:'Apple Pay',note:'自動偵測示範'});persist();closeModal('noticeModal');toast('已加入記帳');render()}
 function editBudget(){let n=prompt('請輸入這個月的預算金額',state.budget);if(n!==null&&!isNaN(n)&&+n>0){state.budget=+n;persist();render();toast('預算已更新')}}
 function manageCats(){alert('目前分類：\\n'+CATS.map(x=>x[0]+' '+x[1]).join('　')+'\\n\\n自訂分類功能可在後續版本擴充。')}
 function openSettings(){document.getElementById('settingsModal').classList.add('show')}
