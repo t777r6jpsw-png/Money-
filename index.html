@@ -24,6 +24,12 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 .toolbar{display:flex;gap:7px;margin-top:12px}.toolbar .seg{flex:1}.chart{height:190px;display:flex;align-items:end;gap:7px;padding:15px 5px 0}.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}.bar i{width:100%;max-width:24px;background:var(--blue);border-radius:7px 7px 2px 2px}.bar small{font-size:9px;color:var(--muted)}
 .donut{width:168px;height:168px;border-radius:50%;margin:10px auto 17px;background:conic-gradient(var(--navy) 0 29%,#7394ad 29% 49%,#c9b68e 49% 66%,#7d9a90 66% 79%,#b7a4c4 79% 86%,#d3d7d9 86% 100%);position:relative}.donut:after{content:"";position:absolute;inset:36px;background:var(--cream);border-radius:50%}.center{position:absolute;inset:0;z-index:1;display:grid;place-items:center;text-align:center;font-family:Georgia,serif;font-size:22px}.rowline{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}.rowline:last-child{border:0}.pill{font-size:10px;padding:4px 8px;border-radius:20px;background:var(--sky);color:var(--navy)}
 .empty{text-align:center;color:var(--muted);padding:30px 8px;font-size:12px}.yearGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.yearCard{border:1px solid var(--line);border-radius:14px;padding:10px 5px;background:#fff}.yearCard b{font-family:Georgia,serif;font-size:14px}.miniBar{height:5px;background:#e9edf0;border-radius:6px;margin-top:8px;overflow:hidden}.miniBar i{display:block;height:100%;background:var(--blue)}
+
+.palette{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}
+.swatch{border:1px solid var(--line);background:#fff;border-radius:14px;padding:7px 4px 8px;text-align:center;font-size:9px;color:var(--ink)}
+.swatchDot{width:34px;height:34px;border-radius:50%;margin:0 auto 6px;box-shadow:inset 0 0 0 1px #ffffff55}
+.swatch.on{border:2px solid var(--navy);padding:6px 3px 7px}
+.colorPreview{height:8px;border-radius:8px;margin-top:10px;background:var(--navy)}
 .settingItem{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-size:13px}.settingItem:last-child{border:0}.danger{color:var(--red)}
 .modal{position:fixed;inset:0;background:#10283a66;display:none;align-items:flex-end;justify-content:center;z-index:30}.modal.show{display:flex}.sheet{width:min(430px,100%);background:var(--cream);border-radius:25px 25px 0 0;padding:19px 18px 30px;max-height:90vh;overflow:auto}.close{float:right;border:0;background:none;font-size:25px;color:var(--ink);line-height:1}.notice{padding:16px;border-radius:18px;background:#edf4f8;border:1px solid #d6e3eb;margin-top:12px}.notice b{color:var(--navy)}.monthPicker{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}.monthPicker select{border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px;color:var(--navy)}.closeTop{display:flex;justify-content:space-between;align-items:center}.closeTop h2{margin:0}
 .toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,20px);background:#17324d;color:#fff;padding:11px 15px;border-radius:12px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:50}.toast.show{opacity:1;transform:translate(-50%,0)}
@@ -77,7 +83,7 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 </section>
 
 <section id="accounts" class="screen"><h1>帳戶</h1><div class="hero"><div class="label">目前帳務總覽</div><div class="balance" id="netAssets">$0</div></div><div class="card" id="accountsList"></div>
-<div class="card"><div class="settingItem"><span>🎯 預算設定</span><button class="ghost" onclick="editBudget()">編輯</button></div><div class="settingItem"><span>🏷️ 分類管理</span><button class="ghost" onclick="manageCats()">查看</button></div><div class="settingItem"><span>⚙️ 設定</span><button class="ghost" onclick="openSettings()">開啟</button></div></div>
+<div class="card"><div class="settingItem"><span>🎨 介面色彩</span><span class="pill" id="themeName">質感藍</span></div><p class="sub" style="margin:3px 0 0">選擇你喜歡的質感莫蘭迪色，整個 App 會立即套用。</p><div class="palette" id="palette"></div><div class="colorPreview" id="colorPreview"></div></div><div class="card"><div class="settingItem"><span>🎯 預算設定</span><button class="ghost" onclick="editBudget()">編輯</button></div><div class="settingItem"><span>🏷️ 分類管理</span><button class="ghost" onclick="manageCats()">查看</button></div><div class="settingItem"><span>⚙️ 設定</span><button class="ghost" onclick="openSettings()">開啟</button></div></div>
 <div class="card"><div class="section-head"><b>隱私優先</b><span>🔒</span></div><p class="sub">此 Web Prototype 的帳務資料只儲存在你的瀏覽器，不會連入銀行帳戶。</p></div>
 </section>
 </main>
@@ -90,6 +96,42 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 <div class="toast" id="toast"></div>
 
 <script>
+
+const THEMES={
+  navy:{name:'質感藍',main:'#17324d',blue:'#4d7698',sky:'#dfeaf2',green:'#587b70'},
+  sage:{name:'鼠尾草綠',main:'#4d665d',blue:'#708d82',sky:'#e1e9e5',green:'#587b70'},
+  dustyRose:{name:'灰玫瑰',main:'#765b62',blue:'#9a7c82',sky:'#eee2e4',green:'#667a70'},
+  terracotta:{name:'陶土棕',main:'#795d52',blue:'#a17b6c',sky:'#eee3de',green:'#687969'},
+  taupe:{name:'摩卡灰',main:'#665d55',blue:'#8d8075',sky:'#ebe7e3',green:'#657267'},
+  sand:{name:'奶茶杏',main:'#806d59',blue:'#a18c73',sky:'#eee7dd',green:'#657666'},
+  mauve:{name:'灰紫',main:'#655b6e',blue:'#8b7e97',sky:'#e9e4eb',green:'#647468'},
+  mist:{name:'霧灰藍',main:'#506674',blue:'#78909f',sky:'#e1e8ec',green:'#5f746e'},
+  clayPink:{name:'裸粉陶',main:'#7b6260',blue:'#a18481',sky:'#eee4e2',green:'#65746c'},
+  olive:{name:'橄欖灰',main:'#626752',blue:'#858a6f',sky:'#e8e9df',green:'#607063'},
+  cocoa:{name:'可可灰',main:'#62564f',blue:'#8a7569',sky:'#e9e3df',green:'#627168'},
+  eucalyptus:{name:'尤加利',main:'#4f6d67',blue:'#76928b',sky:'#e0e9e6',green:'#58756e'},
+  lavender:{name:'霧薰衣草',main:'#625e72',blue:'#858097',sky:'#e7e4eb',green:'#65746d'},
+  charcoal:{name:'暖炭灰',main:'#44494b',blue:'#6c777c',sky:'#e4e6e6',green:'#5e6b67'},
+  butter:{name:'奶油黃',main:'#776f51',blue:'#a0966f',sky:'#eeeadd',green:'#667465'}
+};
+function applyTheme(key){
+  const t=THEMES[key]||THEMES.navy;
+  const r=document.documentElement.style;
+  r.setProperty('--navy',t.main);r.setProperty('--blue',t.blue);r.setProperty('--sky',t.sky);r.setProperty('--green',t.green);
+  localStorage.setItem('moneymateTheme',key);
+  document.querySelectorAll('.swatch').forEach(x=>x.classList.toggle('on',x.dataset.theme===key));
+  const name=document.getElementById('themeName'); if(name) name.textContent=t.name;
+}
+function initTheme(){applyTheme(localStorage.getItem('moneymateTheme')||'navy')}
+function renderPalette(){
+  const box=document.getElementById('palette');
+  if(!box)return;
+  const current=localStorage.getItem('moneymateTheme')||'navy';
+  box.innerHTML=Object.entries(THEMES).map(([k,t])=>`<button class="swatch ${k===current?'on':''}" data-theme="${k}" onclick="applyTheme('${k}')"><div class="swatchDot" style="background:${t.main}"></div>${t.name}</button>`).join('');
+  const t=THEMES[current]||THEMES.navy;
+  const p=document.getElementById('colorPreview');if(p)p.style.background=t.main;
+}
+
 const CATS=[['🍜','飲食'],['🚗','交通'],['🛍️','購物'],['🏠','生活'],['💆','個人'],['🎬','娛樂'],['❤️','健康'],['💼','工作'],['🐾','寵物'],['🎓','教育'],['☕','咖啡'],['⋯','其他']];
 const now=new Date(), pad=n=>String(n).padStart(2,'0'), defaultMonth=`${now.getFullYear()}-${pad(now.getMonth()+1)}`;
 let selectedMonth=localStorage.getItem('moneymateMonth')||defaultMonth, type='expense',selectedCat='飲食',editingId=null,statPeriod='month',statType='expense';
@@ -118,7 +160,7 @@ document.getElementById('summaryMonth').textContent=ymLabel(selectedMonth);
 document.getElementById('sumBalance').textContent=money(bal);document.getElementById('sumIncome').textContent=money(t.income);document.getElementById('sumExpense').textContent=money(t.expense);
 document.getElementById('saveRate').textContent=t.income?Math.round(bal/t.income*100)+'%':'0%';document.getElementById('txCount').textContent=m.length;
 let byCat=groupCat(m.filter(x=>x.type==='expense')),top=Object.entries(byCat).sort((a,b)=>b[1]-a[1])[0];document.getElementById('topCat').textContent=top?`${top[0]} ${money(top[1])}`:'—';document.getElementById('summaryText').textContent=t.expense?`本月共 ${m.length} 筆交易，最高支出為「${top?top[0]:'—'}」。預算使用率 ${Math.round(pct)}%。`:'開始記帳後，這裡會自動產生你的財務摘要。';
-renderStats();renderYear();renderAccounts();attachSwipe();
+renderStats();renderYear();renderAccounts();renderPalette();attachSwipe();
 }
 function txHtml(x){return `<div class="txWrap" id="tx-${x.id}"><div class="txActions"><button class="editBtn" onclick="editTx(${x.id})">編輯</button><button class="deleteBtn" onclick="deleteTx(${x.id})">刪除</button></div><div class="tx"><div class="icon">${x.icon||'•'}</div><div class="info"><div class="name">${esc(x.merchant||x.note||x.cat)}</div><div class="meta">${esc(x.cat||'轉帳')} · ${x.date} · ${esc(x.account||'')}</div></div><div class="amount ${x.type==='income'?'income':''}">${x.type==='income'?'+':'−'}${money(x.amount)}</div></div></div>`}
 function attachSwipe(){
@@ -195,7 +237,7 @@ function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:'ap
 function clearData(){if(confirm('確定清除所有本機帳務資料？')){localStorage.removeItem('moneymate');location.reload()}}
 function toast(msg){let e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1600)}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-renderCats();render();
+initTheme();renderCats();render();renderPalette();
 </script>
 </body>
 </html>
