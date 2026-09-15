@@ -1,12 +1,11 @@
-MoneyMate V7｜無登入版 App
+MoneyMate V8｜Email 自動偵測記帳 Prototype
 
-特色：
-- 開啟即可使用，不需 Email、密碼或 Apple 登入
-- 帳務資料儲存在使用者自己的瀏覽器／裝置本機 localStorage
-- 保留 V6 全部記帳、統計、年度、預算、帳戶、主題等功能
-- 可匯出 JSON 帳務資料
-- 加入 PWA manifest + service worker，可從支援的瀏覽器加入主畫面，以 App 形式開啟
+本版本保留 V7 全部功能，新增 Email 自動偵測記帳介面：
+1. 帳戶／設定可開啟「Email 自動記帳」。
+2. 可選 Gmail、iCloud、Outlook（目前為 Prototype 介面，尚未真的登入信箱）。
+3. 可設定銀行／信用卡、LINE Pay、電子發票等來源開關。
+4. 可貼上消費通知 Email 測試解析，或模擬收到 2 封新消費 Email。
+5. Email 交易先進入「待確認交易」，確認後才寫入正式帳本。
+6. 待確認交易會出現在首頁，可逐筆記帳。
 
-GitHub Pages：將整個資料夾內容放在 repository 根目錄，確保 index.html、manifest.webmanifest、sw.js、icon.svg 同層。
-
-注意：V7 是無登入、本機資料版本。若清除瀏覽器網站資料或更換裝置，資料不會自動跨裝置同步；正式 iPhone App 後可再加入 iCloud 或 Email 雲端同步。
+重要：一般網頁 Prototype 不能直接讀取使用者 Gmail/iCloud/Outlook 信箱。正式版需使用合法的 OAuth／郵件 API 並取得使用者明確授權。Apple 的 MailKit 是 Mail App Extension 框架，不等同於第三方 App 可任意讀取所有郵件；正式產品應依實際郵件服務 API 與 Apple 平台規範設計。

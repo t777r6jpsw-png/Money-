@@ -6,8 +6,5 @@
   "background_color": "#fbfaf7",
   "theme_color": "#17324d",
   "lang": "zh-Hant",
-  "description": "簡潔、隱私優先的個人記帳工具",
-  "icons": [
-    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
-  ]
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
 }
