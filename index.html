@@ -52,7 +52,7 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 <div class="sub">早安，</div><h1>今天也要好好過生活。</h1>
 <div class="hero"><div class="label" id="homePeriod">本月結餘</div><div class="balance" id="homeBalance">$0</div><div class="row"><div>收入<br><b id="homeIncome">$0</b></div><div>支出<br><b id="homeExpense">$0</b></div></div></div>
 <div class="card"><div class="section-head"><b>本月預算</b><span id="budgetPct" class="sub">0%</span></div><div class="progress"><i id="budgetBar" style="width:0%"></i></div><div class="section-head"><span id="budgetUsed" class="sub">$0 / $50,000</span><span id="budgetLeft" class="sub">剩餘 $50,000</span></div></div>
-<div id="emailPendingHome"></div>
+<div id="homePendingCard" class="pendingCard"></div>
 <div class="quick"><button onclick="openAdd('income')"><span>＋</span>收入</button><button onclick="openAdd('expense')"><span>−</span>支出</button><button onclick="openAdd('transfer')"><span>⇄</span>轉帳</button><button onclick="show('transactions')"><span>▣</span>瀏覽</button></div>
 <div class="section-head"><h2>最近交易</h2><button class="link" onclick="show('transactions')">顯示全部 ›</button></div><div class="card" id="recent"></div>
 </section>
@@ -60,7 +60,6 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 <section id="add" class="screen">
 <div class="closeTop"><h1 style="margin:7px 0">快速記帳</h1><button class="close" onclick="show('home')">×</button></div>
 <div class="linePayCard"><div class="lpTitle"><span class="lpIcon">💚</span> LINE Pay 截圖記帳</div><p>付款後將 LINE Pay 通知截圖存到照片，再交給 MoneyMate 辨識並確認記帳。</p><button onclick="openLinePayCapture()">📸 從截圖建立交易</button></div>
-<div class="emailCard"><div class="emailTitle"><span class="emailIcon">✉️</span> Email 自動偵測記帳</div><p>未來可由授權的消費通知 Email 自動找出交易，先放入「待確認」再由你一鍵記帳。</p><button onclick="openEmailModal()">⚙️ 設定 Email 自動記帳</button></div>
 <div class="form-card"><div class="seg"><button id="segExpense" class="on" onclick="setType('expense')">支出</button><button id="segIncome" onclick="setType('income')">收入</button><button id="segTransfer" onclick="setType('transfer')">轉帳</button></div>
 <div class="money">NT$ <input id="amount" inputmode="decimal" placeholder="0"></div>
 <div class="field"><label>分類</label><div class="cats" id="cats"></div></div>
@@ -92,8 +91,8 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 </section>
 
 <section id="accounts" class="screen"><h1>帳戶</h1><div class="hero"><div class="label">目前帳務總覽</div><div class="balance" id="netAssets">$0</div></div><div class="card" id="accountsList"></div>
-<div class="card"><div class="settingItem"><span>🎨 介面色彩</span><span class="pill" id="themeName">質感藍</span></div><p class="sub" style="margin:3px 0 0">選擇你喜歡的質感莫蘭迪色，整個 App 會立即套用。</p><div class="palette" id="palette"></div><div class="colorPreview" id="colorPreview"></div></div><div class="card"><div class="settingItem"><span>🎯 預算設定</span><button class="ghost" onclick="editBudget()">編輯</button></div><div class="settingItem"><span>🏷️ 分類管理</span><button class="ghost" onclick="manageCats()">查看</button></div><div class="settingItem"><span>⚙️ 設定</span><button class="ghost" onclick="openSettings()">開啟</button></div></div>
-<div class="card"><div class="section-head"><b>隱私優先</b><span>🔒</span></div><p class="sub">此 Web Prototype 的帳務資料與 Email 設定只儲存在你的瀏覽器；Email 自動偵測目前為 Prototype 模擬，不會真的連入信箱。</p></div>
+<div class="card"><div class="settingItem"><span>🎨 介面色彩</span><span class="pill" id="themeName">質感藍</span></div><p class="sub" style="margin:3px 0 0">選擇你喜歡的質感莫蘭迪色，整個 App 會立即套用。</p><div class="palette" id="palette"></div><div class="colorPreview" id="colorPreview"></div></div><div class="card"><div class="settingItem"><span>🎯 預算設定</span><button class="ghost" onclick="editBudget()">編輯</button></div><div class="settingItem"><span>🏷️ 分類管理</span><button class="ghost" onclick="manageCats()">查看</button></div><div class="settingItem"><span>✉️ Email 自動偵測記帳</span><button class="ghost" onclick="openEmailModal()">設定</button></div><div class="settingItem"><span>⚙️ 設定</span><button class="ghost" onclick="openSettings()">開啟</button></div></div>
+<div class="card"><div class="section-head"><b>隱私優先</b><span>🔒</span></div><p class="sub">MoneyMate 只在你授權後處理指定的消費通知；帳務與待確認交易仍保留在本機。正式 Email 串接使用 OAuth，不需要提供銀行密碼。</p></div>
 </section>
 </main>
 <nav><button onclick="show('home')" data-nav="home">⌂<br>首頁</button><button onclick="show('stats')" data-nav="stats">▥<br>統計</button><button class="plus" onclick="openAdd('expense')">＋</button><button onclick="show('summary')" data-nav="summary">▤<br>總結</button><button onclick="show('accounts')" data-nav="accounts">▣<br>帳戶</button></nav>
@@ -101,10 +100,7 @@ nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,
 
 <div class="modal" id="monthModal"><div class="sheet"><div class="closeTop"><h2>選擇年月</h2><button class="close" onclick="closeModal('monthModal')">×</button></div><div class="monthPicker"><select id="yearSelect"></select><select id="monthSelect"></select></div><button class="primary" onclick="applyMonth()">查看這個月</button></div></div>
 <div class="modal" id="linePayModal"><div class="sheet"><div class="closeTop"><h2>LINE Pay 截圖記帳</h2><button class="close" onclick="closeLinePayCapture()">×</button></div><div id="lpUploadStep"><div class="uploadBox"><div class="uploadIcon">🖼️</div><b>上傳 LINE Pay 通知截圖</b><span>從相簿選擇剛剛保存的 LINE Pay 通知</span><label class="primary" style="display:inline-block;width:auto;margin:0;padding:11px 22px;cursor:pointer"><input id="linePayImage" type="file" accept="image/*" style="display:none" onchange="handleLinePayImage(event)">選擇圖片</label></div><div class="notice"><b>小提醒</b><br><span>請選擇包含「商店名稱、金額、付款時間」的完整通知截圖。</span></div></div><div class="uploadPreview" id="lpPreview"><img id="lpPreviewImg" alt="LINE Pay 通知截圖預覽"></div><div class="analysisBox" id="lpAnalysis"><div class="analysisLoading" id="lpLoading"><div class="spinner"></div><b>正在辨識交易內容…</b><div class="sub" id="lpProgress" style="margin-top:6px">正在讀取圖片文字</div></div><div class="resultCard" id="lpResult" style="display:none"><span class="mockTag">OCR 辨識結果</span><div class="resultTitle">請確認交易資訊</div><div class="resultRow"><span>商店名稱</span><b id="lpMerchant">—</b></div><div class="resultRow"><span>金額</span><b id="lpAmount">—</b></div><div class="resultRow"><span>日期</span><b id="lpDate">—</b></div><div class="resultRow"><span>付款方式</span><b>LINE Pay</b></div><div class="resultRow"><span>分類</span><b id="lpCategory">其他</b></div><div class="notice" style="margin-top:12px"><b>⚠️ 請確認</b><br><span>MoneyMate 已從截圖辨識文字；請確認商店、金額與日期正確後再記帳。若辨識不完整，可回到手動記帳修改。</span></div><div class="uploadActions"><button class="ghost" onclick="closeLinePayCapture()">取消</button><button class="primary" style="margin-top:0" onclick="confirmLinePayOCR()">確認記帳</button></div></div></div></div></div><div class="modal" id="noticeModal"><div class="sheet"><div class="closeTop"><h2>🔔 發現一筆消費</h2><button class="close" onclick="closeModal('noticeModal')">×</button></div><div class="notice"><b>示範通知｜Starbucks</b><br><span>這是 Prototype 的測試資料，不代表真的偵測到消費。<br><br>消費類別：飲食／咖啡<br>交易金額：NT$145<br>付款方式：LINE Pay</span></div><button class="primary" onclick="demoNotice()">確認記帳</button><button class="ghost" style="width:100%;margin-top:9px" onclick="closeModal('noticeModal')">稍後處理</button></div></div>
-<div class="modal" id="pendingModal"><div class="sheet"><div class="closeTop"><h2>待確認交易</h2><button class="close" onclick="closeModal('pendingModal')">×</button></div><div class="sub">Email 偵測到的交易會先放在這裡，不會直接寫入帳本。</div><div id="pendingList"></div><button class="ghost" style="width:100%;margin-top:9px" onclick="clearPendingEmails()">清除待確認</button></div></div><div class="modal" id="emailModal"><div class="sheet"><div class="closeTop"><h2>✉️ Email 自動記帳</h2><button class="close" onclick="closeModal('emailModal')">×</button></div><div class="notice"><b>自動偵測流程</b><br><span>授權 Email → 找出消費通知 → 自動解析店家、金額、日期 → 放入待確認 → 你確認後才寫入帳本。</span></div><div class="emailSetting"><div class="emailSettingTitle"><b>1. Email 帳號</b><span class="pill" id="emailStatus">尚未連接</span></div><div class="emailProviders"><button class="emailProvider on" id="emailGmail" onclick="selectEmailProvider('Gmail')"><span>📧</span>Gmail</button><button class="emailProvider" id="emailIcloud" onclick="selectEmailProvider('iCloud')"><span>☁️</span>iCloud</button><button class="emailProvider" id="emailOutlook" onclick="selectEmailProvider('Outlook')"><span>📨</span>Outlook</button></div><button class="primary" style="margin-top:10px" onclick="connectEmailDemo()">連接 Email（Prototype）</button></div><div class="emailSetting"><div class="emailSettingTitle"><b>2. 消費通知來源</b><span class="sub">可自訂</span></div><div class="rowline"><span>銀行／信用卡</span><button class="toggle on" id="emailBankToggle" onclick="toggleEmailSource('bank')"><i></i></button></div><div class="rowline"><span>LINE Pay</span><button class="toggle on" id="emailLineToggle" onclick="toggleEmailSource('line')"><i></i></button></div><div class="rowline"><span>電子發票</span><button class="toggle" id="emailInvoiceToggle" onclick="toggleEmailSource('invoice')"><i></i></button></div></div><div class="emailSetting"><div class="emailSettingTitle"><b>3. 同步頻率</b><span class="sub">Prototype</span></div><select id="emailSync" class="field" style="margin-top:9px;width:100%;border:1px solid var(--line);background:#fafbfa;border-radius:12px;padding:11px"><option>即時同步</option><option>每小時一次</option><option>每天一次</option></select></div><div class="emailSetting"><div class="emailSettingTitle"><b>4. 測試 Email 解析</b><span class="sub">不會直接入帳</span></div><textarea id="emailText" class="emailTextarea" placeholder="可貼上一封消費通知 Email，例如：
-【消費通知】全家便利商店 消費 NT$120
-交易日期：2026/09/15
-付款方式：LINE Pay"></textarea><button class="ghost" style="width:100%;margin-top:9px" onclick="parseEmailInput()">解析這封 Email</button><button class="primary" style="margin-top:9px" onclick="simulateEmailDetection()">模擬收到 2 封新消費 Email</button></div><div class="notice"><b>🔒 隱私提醒</b><br><span>正式版會在取得你的明確授權後才處理指定的消費通知，並應提供取消授權與刪除資料的方式。</span></div></div></div><div class="modal" id="settingsModal"><div class="sheet"><div class="closeTop"><h2>設定</h2><button class="close" onclick="closeModal('settingsModal')">×</button></div><div class="settingItem"><span>✉️ Email 自動記帳</span><button class="ghost" onclick="openEmailModal()">設定</button></div><div class="settingItem"><span>🔔 消費記帳提醒</span><button class="ghost" onclick="toast('已切換提醒設定')">開啟</button></div><div class="settingItem"><span>💾 資料匯出</span><button class="ghost" onclick="exportData()">匯出 JSON</button></div><div class="settingItem"><span>🗑️ 清除所有資料</span><button class="ghost danger" onclick="clearData()">清除</button></div></div></div>
+<div class="modal" id="pendingModal"><div class="sheet"><div class="closeTop"><h2>待確認交易</h2><button class="close" onclick="closeModal('pendingModal')">×</button></div><div class="sub">Email 偵測到的交易會先放在這裡，不會直接寫入帳本。</div><div id="pendingList"></div><button class="ghost" style="width:100%;margin-top:9px" onclick="clearPendingEmails()">清除待確認</button></div></div><div class="modal" id="emailModal"><div class="sheet"><div class="closeTop"><h2>✉️ Email 自動偵測記帳</h2><button class="close" onclick="closeModal('emailModal')">×</button></div><div class="notice"><b>正式使用模式</b><br><span>授權你的 Email 後，MoneyMate 會搜尋指定的消費通知，解析店家、金額、日期與付款方式，再放入「待確認交易」。</span></div><div class="emailSetting"><div class="emailSettingTitle"><b>1. 連接 Email</b><span class="pill" id="emailStatus">尚未連接</span></div><div class="emailProviders"><button class="emailProvider on" id="emailGmail" onclick="selectEmailProvider('Gmail')"><span>📧</span>Gmail</button><button class="emailProvider" id="emailIcloud" onclick="selectEmailProvider('iCloud')"><span>☁️</span>iCloud</button><button class="emailProvider" id="emailOutlook" onclick="selectEmailProvider('Outlook')"><span>📨</span>Outlook</button></div><button class="primary" style="margin-top:10px" onclick="connectEmail()">授權並連接 Email</button><div class="emailSource">正式版使用 OAuth 授權；MoneyMate 不會要求你輸入 Email 密碼。</div></div><div class="emailSetting"><div class="emailSettingTitle"><b>2. 要偵測哪些消費通知？</b><span class="sub">可自訂</span></div><div class="rowline"><span>銀行／信用卡</span><button class="toggle on" id="emailBankToggle" onclick="toggleEmailSource('bank')"><i></i></button></div><div class="rowline"><span>LINE Pay</span><button class="toggle on" id="emailLineToggle" onclick="toggleEmailSource('line')"><i></i></button></div><div class="rowline"><span>電子發票</span><button class="toggle" id="emailInvoiceToggle" onclick="toggleEmailSource('invoice')"><i></i></button></div></div><div class="emailSetting"><div class="emailSettingTitle"><b>3. 消費通知寄件人</b><span class="sub">可選</span></div><input id="emailSenderFilter" class="emailTextarea" style="min-height:46px;resize:none" placeholder="例如：國泰世華、Cathay、LINE Pay"><div class="emailSource">可填銀行／信用卡或支付服務名稱，讓 MoneyMate 優先搜尋相關信件。</div></div><div class="emailSetting"><div class="emailSettingTitle"><b>4. 同步方式</b><span class="sub">依授權能力執行</span></div><select id="emailSync" class="field" style="margin-top:9px;width:100%;border:1px solid var(--line);background:#fafbfa;border-radius:12px;padding:11px"><option>開啟 App 時檢查</option></select></div><div class="notice"><b>📥 待確認交易</b><br><span>偵測到的消費不會直接入帳。請回到「首頁 → 待確認交易」逐筆確認。</span></div><button class="ghost" style="width:100%;margin-top:9px" onclick="openPendingModal()">查看待確認交易 <span id="pendingCountModal">0</span></button><div class="notice"><b>🔒 隱私</b><br><span>只處理你授權的信箱與符合消費通知條件的郵件。若未來正式串接 Gmail，會使用 OAuth 授權而不是要求你提供 Gmail 密碼。</span></div></div></div><div class="modal" id="settingsModal"><div class="sheet"><div class="closeTop"><h2>設定</h2><button class="close" onclick="closeModal('settingsModal')">×</button></div><div class="settingItem"><span>🔔 消費記帳提醒</span><button class="ghost" onclick="toast('已切換提醒設定')">開啟</button></div><div class="settingItem"><span>💾 資料匯出</span><button class="ghost" onclick="exportData()">匯出 JSON</button></div><div class="settingItem"><span>🗑️ 清除所有資料</span><button class="ghost danger" onclick="clearData()">清除</button></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -140,7 +136,8 @@ const CATS=[['🍜','飲食'],['🚗','交通'],['🛍️','購物'],['🏠','�
 const now=new Date(), pad=n=>String(n).padStart(2,'0'), defaultMonth=`${now.getFullYear()}-${pad(now.getMonth()+1)}`;
 let selectedMonth=localStorage.getItem('moneymateMonth')||defaultMonth, type='expense',selectedCat='飲食',editingId=null,statPeriod='month',statType='expense';
 let state=JSON.parse(localStorage.getItem('moneymate')||'null')||{budget:50000,tx:[]};
-state.email=state.email||{connected:false,provider:'Gmail',sources:{bank:true,line:true,invoice:false},sync:'即時同步'};
+state.email=state.email||{connected:false,provider:'Gmail',sources:{bank:true,line:true,invoice:false},sync:'開啟 App 時檢查',senderFilter:''};
+state.email.senderFilter=state.email.senderFilter||'';
 state.pendingEmails=Array.isArray(state.pendingEmails)?state.pendingEmails:[];
 // V7：全新安裝不預設任何示範交易；若瀏覽器仍保留舊版 V6/V7 的示範資料，僅移除已知的預設交易。
 if(Array.isArray(state.tx)){
@@ -296,14 +293,25 @@ function openEmailModal(){
   document.getElementById('emailModal').classList.add('show');
 }
 function selectEmailProvider(provider){state.email.provider=provider;persist();syncEmailSettingsUI();}
-function connectEmailDemo(){state.email.connected=true;persist();syncEmailSettingsUI();toast(`已連接 ${state.email.provider}（Prototype）`);}
+function connectEmail(){
+  const p=state.email.provider||'Gmail';
+  if(p==='Gmail'){
+    if(window.MoneyMateGmailConnect){ window.MoneyMateGmailConnect(); return; }
+    toast('Gmail 正式串接需要設定 Google OAuth Client ID');
+    alert('要讓 MoneyMate 真的讀取 Gmail，需要先在 Google Cloud 建立 OAuth 2.0 Client ID，並將 GitHub Pages 網址加入授權來源。設定完成後，這裡會開啟 Google 授權頁，不需要輸入 Gmail 密碼。');
+    return;
+  }
+  toast(`${p} 目前尚未接入正式 API，請先使用 Gmail OAuth`);
+}
 function toggleEmailSource(key){state.email.sources[key]=!state.email.sources[key];persist();syncEmailSettingsUI();}
 function syncEmailSettingsUI(){
   const e=state.email||{};
   document.getElementById('emailStatus').textContent=e.connected?`已連接 ${e.provider}`:'尚未連接';
   ['Gmail','iCloud','Outlook'].forEach(p=>{const id='email'+(p==='Gmail'?'Gmail':p==='iCloud'?'Icloud':'Outlook');const el=document.getElementById(id);if(el)el.classList.toggle('on',e.provider===p);});
   ['bank','line','invoice'].forEach(k=>{const id='email'+(k==='bank'?'Bank':k==='line'?'Line':'Invoice')+'Toggle';const el=document.getElementById(id);if(el){el.classList.toggle('on',!!e.sources[k]);}});
-  const sync=document.getElementById('emailSync');if(sync)sync.value=e.sync||'即時同步';
+  const sync=document.getElementById('emailSync');if(sync)sync.value=e.sync||'開啟 App 時檢查';
+  const sf=document.getElementById('emailSenderFilter');if(sf)sf.value=e.senderFilter||'';
+  renderEmailPending();
 }
 function parseEmailText(text){
   const t=String(text||'').replace(/\r/g,'\n');
@@ -320,23 +328,19 @@ function addPendingEmail(item){
   if(!item.amount){toast('Email 中沒有辨識到金額');return false;}
   state.pendingEmails.push({id:Date.now()+Math.random(),source:'Email',merchant:item.merchant||'未辨識商店',amount:item.amount,date:item.date||new Date().toISOString().slice(0,10),account:item.account||'銀行帳戶',cat:item.cat||'其他'});persist();renderEmailPending();return true;
 }
-function parseEmailInput(){
-  const text=document.getElementById('emailText').value.trim();if(!text){toast('請先貼上消費通知 Email');return;}
-  const item=parseEmailText(text);if(addPendingEmail(item)){document.getElementById('emailText').value='';closeModal('emailModal');openPendingModal();toast('已放入待確認交易');}
-}
-function simulateEmailDetection(){
-  state.email.connected=true;
-  const today=new Date().toISOString().slice(0,10);
-  const samples=[{merchant:'全家便利商店',amount:120,date:today,account:'LINE Pay',cat:'餐飲'},{merchant:'UNIQLO',amount:1290,date:today,account:'信用卡',cat:'購物'}];
-  samples.forEach((x,i)=>state.pendingEmails.push({id:Date.now()+i,source:'Email',...x}));
-  persist();syncEmailSettingsUI();closeModal('emailModal');renderEmailPending();openPendingModal();toast('已模擬收到 2 封消費 Email');
-}
 function renderEmailPending(){
-  const home=document.getElementById('emailPendingHome');if(!home)return;
-  const list=state.pendingEmails||[];
-  if(!list.length){home.innerHTML=`<div class="emailCard"><div class="emailTitle"><span class="emailIcon">✉️</span> Email 自動偵測記帳</div><p>${state.email&&state.email.connected?'已開啟 Email 偵測，目前沒有待確認交易。':'連接消費通知 Email，讓 MoneyMate 幫你找出待記帳交易。'}</p><button onclick="openEmailModal()">${state.email&&state.email.connected?'管理 Email 偵測':'開始設定'}</button></div>`;return;}
-  const preview=list.slice(0,3).map(x=>`<div class="pendingItem"><div class="pIcon">${(CATS.find(c=>c[1]===x.cat)||['✉️'])[0]}</div><div class="pInfo"><div class="pName">${esc(x.merchant)}</div><div class="pMeta">${esc(x.account)} · ${esc(x.date)}</div></div><div class="pAmount">${money(x.amount)}</div></div>`).join('');
-  home.innerHTML=`<div class="pendingCard"><div class="pendingHeader"><b>✉️ 待確認交易</b><span class="pendingBadge">${list.length} 筆</span></div>${preview}<button class="primary" style="margin-top:12px" onclick="openPendingModal()">查看並確認記帳</button></div>`;
+  const list=Array.isArray(state.pendingEmails)?state.pendingEmails:[];
+  const count=list.length;
+  const pm=document.getElementById('pendingCountModal'); if(pm) pm.textContent=`（${count}）`;
+  const card=document.getElementById('homePendingCard');
+  if(card){
+    if(!count){card.style.display='block';card.innerHTML='<div class="pendingHeader"><div><b>📥 待確認交易</b></div></div><div class="pendingEmpty" aria-hidden="true"></div>';}
+    else{
+      card.style.display='block';
+      const preview=list.slice(0,2).map(x=>`<div class="pendingItem"><div class="pIcon">${(CATS.find(c=>c[1]===x.cat)||['✉️'])[0]}</div><div class="pInfo"><div class="pName">${esc(x.merchant)}</div><div class="pMeta">${esc(x.date)} · ${esc(x.account)} · ${esc(x.cat)}</div></div><div class="pAmount">${money(x.amount)}</div></div>`).join('');
+      card.innerHTML=`<div class="pendingHeader"><div><b>📥 待確認交易</b><div class="sub" style="margin-top:4px">發現 ${count} 筆消費，確認後才會加入帳本</div></div><span class="pendingBadge">${count} 筆</span></div>${preview}<button class="primary" style="margin-top:10px" onclick="openPendingModal()">查看並確認記帳</button>`;
+    }
+  }
 }
 function openPendingModal(){renderPendingList();document.getElementById('pendingModal').classList.add('show');}
 function renderPendingList(){
@@ -358,6 +362,7 @@ function clearData(){if(confirm('確定清除所有本機帳務資料？')){loca
 function toast(msg){let e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1600)}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 const emailSyncEl=document.getElementById('emailSync');if(emailSyncEl)emailSyncEl.addEventListener('change',e=>{state.email.sync=e.target.value;persist();});
+const emailSenderEl=document.getElementById('emailSenderFilter');if(emailSenderEl)emailSenderEl.addEventListener('input',e=>{state.email.senderFilter=e.target.value;persist();});
 initTheme();renderCats();render();renderPalette();
 </script>
 </body>
